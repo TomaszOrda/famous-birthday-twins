@@ -1,0 +1,49 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Birthday twins</title>
+    <link rel="shortcut icon" type="image/jpg" href="https://icons8.com/icon/43638/note"/>
+	<link rel="stylesheet" href="style.css" type="text/css"  />
+    <script src="script.js"></script>
+    <script src="data.js"></script>
+</head>
+<body onload="handleUrlParams()">
+    <h1>
+        Your (most famous) birthday twin
+        <div class="underline"></div>
+    </h1> 
+    
+    <p>Birthday twins are people who share the day and month of their birthday — not necesarily year. 
+    However the term should be considered a colloquialism, as there are no references to it in dictionaries.</p>
+
+    <label for="birthday">Your birthday:</label>
+    <input type="date" id="birthday" name="birthday" /> 
+    <button onclick="updateTable()">Search</button>
+
+    <div id="listOfTwins">
+        <h3>On <span id="day"></span> <span id="month"></span> such people were born:</h3>
+        
+        <table id="listOfTwinsTable">
+        </table>
+    </div>
+
+    <h4>
+        Notes
+        <div class="underline"></div>
+    </h4>
+
+    <p>People whom we know only the year of birth, wikidata will assing 1st January. Thus most of the results from that day are not valid. Sometimes we know only the month, then again, it will be visible as the first day of that month.</p>
+
+    <p>Some other days contain confusing (and perhaps sometimes unreliable) data as well. Example being <a href="https://en.wikipedia.org/wiki/Cleopatra" onclick="window.open('https://www.wikidata.org/wiki/Q635')">Cleopatra</a> (11th Januray) and <a href="https://en.wikipedia.org/wiki/Francis_Bacon" onclick="window.open('https://www.wikidata.org/wiki/Q37388')">Francis Bacon</a> (1st February). I believe it is due to the adoption of Gregorian Calendar. And that would be why on <a href="https://pl.wikipedia.org/">Wikipedia</a> the birthday of Francis Bacon is 22 January. It seems we do not know Cleopatra birthday, which corresponds to it noted 1st January — 10 days before 11th.</p>
+
+    <p>A list of 8000 most famous people was used. The list is by no means complete. Running a wikidata query over the set of all people is rather difficult. Here the people were queried over occupation: scientists, artists, writers, leaders etc.</p>
+
+    <p>Another issue is the ranking measure. Here <i>linkcount</i> is used, which seems to be doing its job <mark>most of the time</mark>. Moreover it is only one of the countless ways of estimating somebodys fame.</p>
+    
+    <p>For more information visit <a href="x">Github page</a> of this project.</p>
+    
+</body>
+</html>

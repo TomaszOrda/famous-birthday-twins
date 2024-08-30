@@ -1,0 +1,73 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #141414; 
+    color: #F2F5EA; 
+    height: 100vh;
+    /* padding: 5px; */
+}
+h1::after, h3::after{
+    content:"*According to wikidata";
+    font-size:0.5em;
+    margin-top:5px;
+    display:block;
+    /* top: 100%; */
+}
+.underline{
+    margin-top:0;
+    width:100%;
+    height:0.05em;
+    background-color:#F2F5EA;
+}
+mark{
+    background-color: #9C0D38;
+    color: inherit;
+}
+a{
+    color:#CE5374;
+}
+a:hover{
+    color:white;
+}
+button {
+    background-color:#9C0D38;
+    color:#F2F5EA;
+    border:none;
+    height: 1.5em;
+    font-size: calc(5em / 6);
+}
+button:active{
+    background-color:#CE5374;
+}
+table{
+    margin-top:-1em;
+}
+tr{
+    cursor: pointer;
+    visibility:hidden;
+}
+tr td{
+    padding-left:5px;
+}
+tbody:first-of-type tr{
+    cursor:default;
+    visibility:visible;
+}
+input[type="date"]{
+    background-color:#9C0D38;
+    color:#F2F5EA ;
+    font-size: calc(5em / 6); /*Default font-size converted from pixels to em*/
+
+}
+::-webkit-calendar-picker-indicator { 
+    filter: invert(1); 
+}
+
+#listOfTwins{
+    display:none;
+}
+
+@media (max-width:640px){
+    body{
+        font-size: 2.5vw;
+    }
+}
