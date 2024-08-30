@@ -82,7 +82,7 @@ function updateUrl(month, day){
         // const thisPage = new URL(window.location.href.split("&")[0]+"&month=" + month +"&day=" + day);
 
         // history.replaceState(window.location.href.split("&")[0], "",  "index.html&month=" + month +"&day=" + day)
-        history.replaceState(null, "",  "index.html&month=" + month +"&day=" + day)
+        history.replaceState(null, "",  "&month=" + month +"&day=" + day)
         // if (window.history.replaceState) {
         // //prevents browser from storing history with each change:
         // // window.history.replaceState(statedata, title, url);
