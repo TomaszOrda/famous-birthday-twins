@@ -81,7 +81,7 @@ function handleUrlParams(){
 
 function updateUrl(month, day){
     if(window.location.href.slice(0, 4) == "http"){
-        console.log(window.location.href.split("&")[0] + "?month=" + month +"&day=" + day);
+        // console.log(window.location.href.split("&")[0] + "?month=" + month +"&day=" + day);
         // console.log(history.replaceState)
         // const thisPage = new URL(window.location.href.split("&")[0]+"&month=" + month +"&day=" + day);
 
