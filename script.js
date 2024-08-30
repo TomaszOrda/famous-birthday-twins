@@ -66,8 +66,12 @@ function updateTable(){
 function handleUrlParams(){
     let params = new URLSearchParams(document.location.search);
     if(params.get("day") && params.get("month")){
-        dayParameter   = params.get("day")
-        monthParameter = params.get("month")
+        dayParameter   = params.get("day").toString()
+        if (dayParameter.length ==1)
+            dayParameter = "0"+datParameter
+        monthParameter = params.get("month").toString()
+        if (monthParameter.length ==1)
+            monthParameter = "0"+datParameter
         dateValue = "2024-"+monthParameter+"-"+dayParameter
         document.getElementById('birthday').value = "2024-"+monthParameter+"-"+dayParameter
         if ( document.getElementById('birthday').value == "2024-"+monthParameter+"-"+dayParameter)
@@ -77,12 +81,12 @@ function handleUrlParams(){
 
 function updateUrl(month, day){
     if(window.location.href.slice(0, 4) == "http"){
-        console.log(window.location.href.split("&")[0] + "&month=" + month +"&day=" + day);
+        console.log(window.location.href.split("&")[0] + "?month=" + month +"&day=" + day);
         // console.log(history.replaceState)
         // const thisPage = new URL(window.location.href.split("&")[0]+"&month=" + month +"&day=" + day);
 
         // history.replaceState(window.location.href.split("&")[0], "",  "index.html&month=" + month +"&day=" + day)
-        history.replaceState((window.location.href.split("&")[0], "",  "&month=" + month +"&day=" + day)
+        history.replaceState(null, "",  "?month=" + month +"&day=" + day)
         // if (window.history.replaceState) {
         // //prevents browser from storing history with each change:
         // // window.history.replaceState(statedata, title, url);
