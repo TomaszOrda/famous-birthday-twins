@@ -68,10 +68,10 @@ function handleUrlParams(){
     if(params.get("day") && params.get("month")){
         dayParameter   = params.get("day").toString()
         if (dayParameter.length ==1)
-            dayParameter = "0"+datParameter
+            dayParameter = "0"+dayParameter
         monthParameter = params.get("month").toString()
         if (monthParameter.length ==1)
-            monthParameter = "0"+datParameter
+            monthParameter = "0"+monthParameter
         dateValue = "2024-"+monthParameter+"-"+dayParameter
         document.getElementById('birthday').value = "2024-"+monthParameter+"-"+dayParameter
         if ( document.getElementById('birthday').value == "2024-"+monthParameter+"-"+dayParameter)
