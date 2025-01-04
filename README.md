@@ -113,6 +113,6 @@ Secondly for each record which does not have a specific day (or month) attached 
 
 ## Design of the app
 
-I designed this app with simplicity in mind. A single page application requiring no specific backend. Having used one HTML one CSS and one (two if we count the data in) JS file the architecture is rudimentary and can be easily opened offline using only a browser. Despite the lack of tools, oftentimes crucial for web development, it was the option for an app as simple as this one. Thanks to that it can be [hosted using GitHub Pages](https://tomaszorda.github.io/FamousBirthdayTwins).
+I designed this app with simplicity in mind. A single page application requiring no specific backend. Having used one HTML one CSS and one (two if we count the data in) JS file the architecture is rudimentary and can be easily opened offline using only a browser. Despite the lack of tools, oftentimes crucial for web development, it was the option for an app as simple as this one. Thanks to that it can be [hosted using GitHub Pages](https://tomaszorda.github.io/famous-birthday-twins/).
 
 Simple three color palette was used. Layout of the page was supposed to resemble a simplified Wikipedia article.
