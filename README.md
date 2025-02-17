@@ -66,18 +66,20 @@ Wikipedia is a pretty straightforward idea. Yet there is also Wikidata, which se
 
 The SPARQL query should look as follows.
 
-<code>SELECT DISTINCT ?item ?itemLabel ?linkcount ?birthday WHERE
+```
+SELECT DISTINCT ?item ?itemLabel ?linkcount ?birthday WHERE
 {
 	?item p:P31 ?statement0.
 	?statement0 (ps:P31/(wdt:P279*)) wd:Q5.
-	?item wdt:P569 ?birthdate.
+	?item wdt:P569 ?birthday.
 	FILTER(LANG(?itemLabel) = "en")      # Ensure label is in English
 	?item rdfs:label ?itemLabel.
 	?item wikibase:sitelinks ?linkcount .
 	SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
 }
 ORDER BY desc(?linkcount)
-LIMIT 8000</code>   
+LIMIT 8000
+```   
  However there is another problem. <code>P31Q5</code> is very big and Wikidata query service limits every query to one minute. It would be possible — having of course enough computational power — to download wikidata dump and run the query. I could not do that. Instead the first part of the query is as follows
  
  <code>?item p:P106 ?statement0.
