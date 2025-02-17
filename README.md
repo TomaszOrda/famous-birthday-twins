@@ -80,16 +80,18 @@ SELECT DISTINCT ?item ?itemLabel ?linkcount ?birthday WHERE
 ORDER BY desc(?linkcount)
 LIMIT 8000
 ```   
- However there is another problem. <code>P31Q5</code> is very big and Wikidata query service limits every query to one minute. It would be possible — having of course enough computational power — to download wikidata dump and run the query. I could not do that. Instead the first part of the query is as follows
+ However there is another problem. `P31Q5` is very big and Wikidata query service limits every query to one minute. It would be possible — having of course enough computational power — to download wikidata dump and run the query. I could not do that. Instead the first part of the query is as follows
  
- <code>?item p:P106 ?statement0.
-?statement0 (ps:P106/(wdt:P279*)) wd:Q901.</code>
+```
+	?item p:P106 ?statement0.
+	?statement0 (ps:P106/(wdt:P279*)) wd:Q901.
+```
  
- Which takes all records with given occupation. Here the occupation is <code>Q901</code> which means a scientist.
+ Which takes all records with given occupation. Here the occupation is `Q901` which means a scientist.
  
-Usually that is still not enough. <code>/(wdt:P279*)</code> is also expensive. Getting rid of this part might reduce the results by every record that is not marked scientist, but with a specific scientific occupation (for example a astrologist, that was not marked a scientist for any reason).
+Usually that is still not enough. `/(wdt:P279*)` is also expensive. Getting rid of this part might reduce the results by every record that is not marked scientist, but with a specific scientific occupation (for example a astrologist, that was not marked a scientist for any reason).
 
-Naturally it creates a problem of finding every possible occupation that a famous person might have. Because of that, data provided by this version is very much not complete. The occupations used are <code>Q901, Q82955, Q4964182, Q170790, Q201788, Q483501, Q188094, Q55092, Q482980, Q1930187, Q169470, Q593644, Q36834, Q42973, Q40348, Q662729, Q211236, Q4991371, Q189290, Q4504549, Q116, Q1251441, Q15995642, Q29182, Q639669, Q55631411</code>.
+Naturally it creates a problem of finding every possible occupation that a famous person might have. Because of that, data provided by this version is very much not complete. The occupations used are `Q901, Q82955, Q4964182, Q170790, Q201788, Q483501, Q188094, Q55092, Q482980, Q1930187, Q169470, Q593644, Q36834, Q42973, Q40348, Q662729, Q211236, Q4991371, Q189290, Q4504549, Q116, Q1251441, Q15995642, Q29182, Q639669, Q55631411`.
 
 The query was limited to 8000. It gives us room for any unlucky lists of birthdays (Chance of not hitting each day is very small), while creating a reasonably sized list for each day.
 
