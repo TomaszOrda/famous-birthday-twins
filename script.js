@@ -1,5 +1,5 @@
 function ordinalToCardinal(number){
-    if(number == "11" || number == "12")
+    if(number === "11" || number === "12")
         return number + 'th'
 
     switch(number.slice(-1)){
@@ -26,11 +26,11 @@ function monthNumberToMonthName(month){
 function updateTable(){
     date = document.getElementById('birthday').value
     if(date){
-        date = date.split('-')
+        [year, month, day] = date.split('-')
 
-        day = date[2]
-        month = parseInt(date[1])
+        month = parseInt(month)
         if(day[0] == '0') day = day[1]
+
         updateUrl(month,day)
 
         document.getElementById('day').innerHTML = ordinalToCardinal(day)
@@ -65,33 +65,36 @@ function updateTable(){
 
 function handleUrlParams(){
     let params = new URLSearchParams(document.location.search);
-    if(params.get("day") && params.get("month")){
-        dayParameter   = params.get("day").toString()
-        if (dayParameter.length ==1)
-            dayParameter = "0"+dayParameter
+    if (params.get("day") && params.get("month")){
+
+        dayParameter = params.get("day").toString()
+        if (dayParameter.length == 1)
+            dayParameter = "0" + dayParameter
+
         monthParameter = params.get("month").toString()
-        if (monthParameter.length ==1)
-            monthParameter = "0"+monthParameter
-        dateValue = "2024-"+monthParameter+"-"+dayParameter
-        document.getElementById('birthday').value = "2024-"+monthParameter+"-"+dayParameter
-        if ( document.getElementById('birthday').value == "2024-"+monthParameter+"-"+dayParameter)
+        if (monthParameter.length == 1)
+            monthParameter = "0" + monthParameter
+
+        dateValue = `2024-${monthParameter}-${dayParameter}`
+
+        document.getElementById('birthday').value = dateValue
+        if (document.getElementById('birthday').value == dateValue)
             updateTable()  
     }   
 }
 
 function updateUrl(month, day){
-    if(window.location.href.slice(0, 4) == "http"){
+    if (window.location.href.slice(0, 4) == "http"){
         // console.log(window.location.href.split("&")[0] + "?month=" + month +"&day=" + day);
         // console.log(history.replaceState)
         // const thisPage = new URL(window.location.href.split("&")[0]+"&month=" + month +"&day=" + day);
 
         // history.replaceState(window.location.href.split("&")[0], "",  "index.html&month=" + month +"&day=" + day)
-        history.replaceState(null, "",  "?month=" + month +"&day=" + day)
+        history.replaceState(null, "",  `?month=${month}&day=${day}`)
         // if (window.history.replaceState) {
         // //prevents browser from storing history with each change:
         // // window.history.replaceState(statedata, title, url);
         // const currentState = window.history.state;
         // date = document.getElementById('birthday').value.split("-")
     }
-
 }
