@@ -1,16 +1,17 @@
 function ordinalToCardinal(number){
-    if(number === "11" || number === "12")
-        return number + 'th'
+    numberStr = number.toString()
+    if(numberStr === "11" || numberStr === "12")
+        return numberStr + 'th'
 
-    switch(number.slice(-1)){
+    switch(numberStr.slice(-1)){
         case '1':
-            return number + 'st'
+            return numberStr + 'st'
         case '2':
-            return number + 'nd'
+            return numberStr + 'nd'
         case '3':
-            return number + 'rd'
+            return numberStr + 'rd'
         default:
-            return number + 'th'
+            return numberStr + 'th'
     }
 }
 
@@ -24,12 +25,12 @@ function monthNumberToMonthName(month){
 }
 
 function updateTable(){
-    date = document.getElementById('birthday').value
-    if(date){
-        [year, month, day] = date.split('-')
+    birthday = document.getElementById('birthday').value
+    if(birthday){
+        [year, month, day] = birthday.split('-')
 
         month = parseInt(month)
-        if(day[0] == '0') day = day[1]
+        day = parseInt(day)
 
         updateUrl(month, day)
 
@@ -37,7 +38,7 @@ function updateTable(){
         document.getElementById('month').innerHTML = monthNumberToMonthName(month)
         document.getElementById('listOfTwins').style.display = "initial"
         
-        data = birthdays[`${month}-${day}`]
+        birthdayTwins = birthdays[`${month}-${day}`]
         table = document.getElementById('listOfTwinsTable')
         document.getElementById('listOfTwinsTable').innerHTML = `
             <tr  >
@@ -45,10 +46,10 @@ function updateTable(){
             </tr>
             `
 
-        for(x in data)
+        for(x in birthdayTwins)
             table.innerHTML = table.innerHTML + `
-                <tr onclick="window.location='`+data[x]['link']+`';">
-                    <td>&#x2022;</td><td>`+data[x]['person']+`</td><td>`+data[x]['linkcount']+`</td>
+                <tr onclick="window.location='`+birthdayTwins[x]['link']+`';">
+                    <td>&#x2022;</td><td>`+birthdayTwins[x]['person']+`</td><td>`+birthdayTwins[x]['linkcount']+`</td>
                 </tr>
                 `
     }
@@ -75,10 +76,10 @@ function handleUrlParams(){
         if (monthParameter.length == 1)
             monthParameter = "0" + monthParameter
 
-        dateValue = `2024-${monthParameter}-${dayParameter}`
+        birthdayValue = `2024-${monthParameter}-${dayParameter}`
 
-        document.getElementById('birthday').value = dateValue
-        if (document.getElementById('birthday').value == dateValue)
+        document.getElementById('birthday').value = birthdayValue
+        if (document.getElementById('birthday').value == birthdayValue)
             updateTable()  
     }   
 }
