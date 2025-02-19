@@ -31,13 +31,13 @@ function updateTable(){
         month = parseInt(month)
         if(day[0] == '0') day = day[1]
 
-        updateUrl(month,day)
+        updateUrl(month, day)
 
         document.getElementById('day').innerHTML = ordinalToCardinal(day)
         document.getElementById('month').innerHTML = monthNumberToMonthName(month)
         document.getElementById('listOfTwins').style.display = "initial"
         
-        data = birthdays[month+"-"+day]
+        data = birthdays[`${month}-${day}`]
         table = document.getElementById('listOfTwinsTable')
         document.getElementById('listOfTwinsTable').innerHTML = `
             <tr  >
@@ -58,7 +58,7 @@ function updateTable(){
     for (let item of tableRows){
         setTimeout(() => {
             item.style.visibility = 'visible'
-        }, id*200)
+        }, id * 200)
         id += 1
     }
 }
