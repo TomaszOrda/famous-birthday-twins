@@ -26,25 +26,21 @@ for item in data_sorted:
         prev = item
 
 year = {}
-days_covered = 0
 for idx, x in enumerate(data_sorted):
     key = f"{x['birth_month']}-{x['birth_day']}"
     value = {'person': x['itemLabel'], 'link': x['item'], 'linkcount': x['linkcount']}
 
-    if key not in year.keys():
-        days_covered += 1
-        if days_covered == 365:
-            print("365 days covered after", idx, "records")
-        if days_covered > 365:
-            print("366 days covered after", idx, "records")
+    if key not in year:
         year[key] = [value]
+        if len(year) == 365:
+            print("365 days covered after", idx, "records")
+        if len(year) > 365:
+            print("366 days covered after", idx, "records")
     else:
         year[key].append(value)
 
 with open('data.js', 'w', encoding="UTF-8") as f:
     f.write("birthdays = {\n")
     for key in sorted(year.keys(), key=lambda x: int(x.split('-')[0])*100 + int(x.split('-')[1])):
-        print(key, year[key])
         f.write(f'"{key}":{year[key]},\n')
-
     f.write("}")
