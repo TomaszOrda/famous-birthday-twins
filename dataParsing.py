@@ -1,32 +1,37 @@
 import json
 
+
+def extract_day(date_string):
+    if date_string[0] == "-":
+        date_string = date_string.split('-')[1:]
+    else:
+        date_string = date_string.split('-')
+    return int(date_string[2][0:2])
+
+
+def extract_month(date_string):
+    if date_string[0] == "-":
+        date_string = date_string.split('-')[1:]
+    else:
+        date_string = date_string.split('-')
+    return int(date_string[1])
+
+
 with open('query.json', encoding="UTF-8") as f:
     data = json.load(f)
 
-data_sorted = sorted(data, key=lambda x: int(x['linkcount']), reverse=True)
-for x in reversed(data_sorted):
-    if x['birthdate'][0:4] == 'http':
-        data_sorted.remove(x)
-        continue
-    if x['birthdate'][0] == '-':
-        birth_split = x['birthdate'].split('-')[1:]
-    else:
-        birth_split = x['birthdate'].split('-')
-
-    x['birth_month'] = int(birth_split[1])
-    x['birth_day'] = int(birth_split[2][0:2])
-    del x['birthdate']
-
-data_sorted_distinct = data_sorted[:]
-prev = {}
-for item in data_sorted:
-    if prev == item:
-        data_sorted_distinct.remove(item)
-    else:
-        prev = item
+data = [
+    {
+        **entry,
+        "birth_month": extract_month(entry['birthdate']),
+        "birth_day": extract_day(entry['birthdate'])
+    }
+    for entry in data
+    if entry['birthdate'][0:4] != 'http'
+]
 
 year = {}
-for idx, x in enumerate(data_sorted):
+for idx, x in enumerate(sorted(data, key=lambda x: int(x['linkcount']), reverse=True)):
     key = f"{x['birth_month']}-{x['birth_day']}"
     value = {'person': x['itemLabel'], 'link': x['item'], 'linkcount': x['linkcount']}
 
