@@ -74,13 +74,8 @@ function handleUrlParams(){
     let params = new URLSearchParams(document.location.search);
     if (params.get("day") && params.get("month")){
 
-        let dayParameter = params.get("day").toString()
-        if (dayParameter.length == 1)
-            dayParameter = "0" + dayParameter
-
-        let monthParameter = params.get("month").toString().padStart(2, "0")
-        if (monthParameter.length == 1)
-            monthParameter = "0" + monthParameter
+        dayParameter = params.get("day").toString().padStart(2, "0")
+        monthParameter = params.get("month").toString().padStart(2, "0")
 
         let birthdayValue = `2024-${monthParameter}-${dayParameter}`
 
