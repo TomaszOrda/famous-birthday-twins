@@ -24,6 +24,16 @@ function monthNumberToMonthName(month){
     return MONTHS[month]
 }
 
+function createRow(values){
+    let row = document.createElement("tr")
+    for(value of values){
+        let cell = document.createElement("td")
+        cell.textContent = value
+        row.appendChild(cell)
+    }
+    return row
+}
+
 function updateTable(){
     let birthday = document.getElementById('birthday').value
     if(birthday){
@@ -34,24 +44,20 @@ function updateTable(){
 
         updateUrl(month, day)
 
-        document.getElementById('day').innerHTML = ordinalToCardinal(day)
-        document.getElementById('month').innerHTML = monthNumberToMonthName(month)
+        document.getElementById('day').textContent = ordinalToCardinal(day)
+        document.getElementById('month').textContent = monthNumberToMonthName(month)
         document.getElementById('listOfTwins').style.display = "initial"
         
         let birthdayTwins = birthdays[`${month}-${day}`]
         let table = document.getElementById('listOfTwinsTable')
-        document.getElementById('listOfTwinsTable').innerHTML = `
-            <tr  >
-                <td></td><td></td><td>Score</td>
-            </tr>
-            `
+        table.innerHTML = ""
+        table.appendChild(createRow(["", "", "Score"]))
 
-        for(let x in birthdayTwins)
-            table.innerHTML = table.innerHTML + `
-                <tr onclick="window.location='`+birthdayTwins[x]['link']+`';">
-                    <td>&#x2022;</td><td>`+birthdayTwins[x]['person']+`</td><td>`+birthdayTwins[x]['linkcount']+`</td>
-                </tr>
-                `
+        for(let x in birthdayTwins){
+            let row = createRow(["•", birthdayTwins[x]['person'], birthdayTwins[x]['linkcount']])
+            row.setAttribute("onclick", `window.location='${birthdayTwins[x]['link']}';`);
+            table.appendChild(row)
+        }
     }
 
     let tableRows = document.getElementsByTagName("tr")
