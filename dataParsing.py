@@ -1,8 +1,7 @@
 import json
 
-f = open(f'query.json')
-data = json.load(f)
-f.close()
+with open('query.json', encoding="UTF-8") as f:
+    data = json.load(f)
 
 data_sorted = sorted(data, key=lambda x: int(x['linkcount']), reverse=True)
 for x in reversed(data_sorted):
@@ -42,11 +41,10 @@ for idx, x in enumerate(data_sorted):
     else:
         year[key].append(value)
 
-f = open(f'data.js', 'w')
-f.write("birthdays = {\n")
-for key in sorted(year.keys(), key=lambda x: int(x.split('-')[0])*100 + int(x.split('-')[1])):
-    print(key, year[key])
-    f.write(f'"{key}":{year[key]},\n')
+with open('data.js', 'w', encoding="UTF-8") as f:
+    f.write("birthdays = {\n")
+    for key in sorted(year.keys(), key=lambda x: int(x.split('-')[0])*100 + int(x.split('-')[1])):
+        print(key, year[key])
+        f.write(f'"{key}":{year[key]},\n')
 
-f.write("}")
-f.close()
+    f.write("}")
