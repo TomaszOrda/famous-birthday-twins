@@ -1,5 +1,5 @@
 function ordinalToCardinal(number){
-    numberStr = number.toString()
+    let numberStr = number.toString()
     if(numberStr === "11" || numberStr === "12")
         return numberStr + 'th'
 
@@ -16,18 +16,18 @@ function ordinalToCardinal(number){
 }
 
 function monthNumberToMonthName(month){
-    months = [  null,
-                "January",  "February",     "March",
-                "April",    "May",          "June",
-                "July",     "August",       "September",
-                "October",  "November",     "December"]
-    return months[month]
+    const MONTHS = [null,
+                    "January",  "February",     "March",
+                    "April",    "May",          "June",
+                    "July",     "August",       "September",
+                    "October",  "November",     "December"]
+    return MONTHS[month]
 }
 
 function updateTable(){
-    birthday = document.getElementById('birthday').value
+    let birthday = document.getElementById('birthday').value
     if(birthday){
-        [year, month, day] = birthday.split('-')
+        let [_, month, day] = birthday.split('-')
 
         month = parseInt(month)
         day = parseInt(day)
@@ -38,15 +38,15 @@ function updateTable(){
         document.getElementById('month').innerHTML = monthNumberToMonthName(month)
         document.getElementById('listOfTwins').style.display = "initial"
         
-        birthdayTwins = birthdays[`${month}-${day}`]
-        table = document.getElementById('listOfTwinsTable')
+        let birthdayTwins = birthdays[`${month}-${day}`]
+        let table = document.getElementById('listOfTwinsTable')
         document.getElementById('listOfTwinsTable').innerHTML = `
             <tr  >
                 <td></td><td></td><td>Score</td>
             </tr>
             `
 
-        for(x in birthdayTwins)
+        for(let x in birthdayTwins)
             table.innerHTML = table.innerHTML + `
                 <tr onclick="window.location='`+birthdayTwins[x]['link']+`';">
                     <td>&#x2022;</td><td>`+birthdayTwins[x]['person']+`</td><td>`+birthdayTwins[x]['linkcount']+`</td>
@@ -54,8 +54,8 @@ function updateTable(){
                 `
     }
 
-    tableRows = document.getElementsByTagName("tr")
-    id = 1
+    let tableRows = document.getElementsByTagName("tr")
+    let id = 1
     for (let item of tableRows){
         setTimeout(() => {
             item.style.visibility = 'visible'
@@ -68,15 +68,15 @@ function handleUrlParams(){
     let params = new URLSearchParams(document.location.search);
     if (params.get("day") && params.get("month")){
 
-        dayParameter = params.get("day").toString()
+        let dayParameter = params.get("day").toString()
         if (dayParameter.length == 1)
             dayParameter = "0" + dayParameter
 
-        monthParameter = params.get("month").toString()
+        let monthParameter = params.get("month").toString().padStart(2, "0")
         if (monthParameter.length == 1)
             monthParameter = "0" + monthParameter
 
-        birthdayValue = `2024-${monthParameter}-${dayParameter}`
+        let birthdayValue = `2024-${monthParameter}-${dayParameter}`
 
         document.getElementById('birthday').value = birthdayValue
         if (document.getElementById('birthday').value == birthdayValue)
