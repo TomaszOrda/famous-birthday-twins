@@ -28,37 +28,34 @@ Also, the general version of this problem has a name. It is the coupon collector
 
 ## Covering 366 days in year with random birth dates
 
-The calculation is quite involved. I have not figured a good way of calculating it, that I could show here. It is something I would like to include one day.
+Naturally ever so often a year has $366$ days. And one of those days is four times less likely to appear than others. This complicates calculations **and** changes the results (somewhat) significantly. That is because we might have to wait a significant amount of time for the 29th of February. 
 
-By applying Monte Carlo method this problem finished on average after $2666$ random birthdays.
+Here, basic knowledge of the coupon collector problem is not enough. By applying Monte Carlo method the result was $2666$ random birthdays on average.
 
-Basic knowledge about the coupon collector problem does not seem to solve this in any straightforward way either.
+Let's denote $\forall_{0<i<366} \ p_i = \frac{4}{1461}$ probability of randomly choosing a normal day, and $p_{366} = \frac{4}{1461}$ the probability of getting 29th February.
 
-**TODO**
+To calculate the expected value, we will use the result from [[Ferrante and Frigo, 2014]](https://www.researchgate.net/publication/232028148_A_note_on_the_coupon_-_collector's_problem_with_multiple_arrivals_andthe_random_sampling#pfe):
 
-<!---
-Naturally ever so often a year has $366$ days. And one of those days is four times less likely to appear than others. This complicates calculations **and** changes the results significantly. That is because we might have to wait a significant amount of time for the 29th of February. It might not be completely intuitive. Lets follow with calculations.
+<!-- Short version of the proof-->
 
-Probability of getting a normal day is $1$ in $365.25$ or $4$ in $1461$ (four years). $29$th of February has a chance of $1$ in $1461$.
+$E = \sum_{m=1}^{366} (-1)^{m-1}\sum_{0 < i_1 < i_2 <...<i_m \leq 366} \frac{1}{\sum_k p_{i_k}}\text{.}$
 
-So, probability of getting a new birthdate, after we covered $n$ normal days is $\frac{1461 - 4n}{1461}$. The same probability, but with the leap day among the $n$ covered is $\frac{1461 - (4n - 3)}{1461}$
+We can divide the inner sum into one containing probability of getting 29th February, and one not containing it. Then replacing probabilities with adequate values.
 
-It seems that we cannot really derive a simple formula. Lets represent the expected value as an average over all the possible positions of leap day in the sequence of covered days. We will not derive the previous formula again — instead use shifted geometric distribution directly. However each position is not equally likely. 
+$E = \sum_{m=1}^{366} (-1)^{m-1} ( \sum_{0 < i_1 < i_2 <...<i_m <366} \frac{1}{\sum_k \frac{4}{1461}} + \sum_{0 < i_2 <...<i_m<366} \frac{1}{\sum_k \frac{4}{1461} + \frac{1}{1461}} )$
 
-To get likelihood of leap day being covered $n$th we can start with the first few values of $n$. Chance that the first covered day is the leap day is $1$ in $1461$ as it is the first birthday drawn. For leap day being second we need to choose a non leap day first, and then leap day from remaining — $\frac{1460}{1461}\frac{1}{1460}$. Third is $\frac{1460}{1461}\frac{1459}{1460}\frac{1}{1459}$. In general, chance for leap day covering $n$th date in a year is $\frac{1460!/(1461-n)!}{1461!}$
+By collapsing the inner sums into multiplications we ge:
 
-$\frac{1}{366} \sum_{l=0}^{365} \left(\sum_{i=0}^{l}\frac{1461}{1461 - 4i} + \sum_{i=l+1}^{365}\frac{1461}{1461 - (4i - 3)}\right)= 
-\frac{1461}{366} \sum_{l=0}^{365} \left(\sum_{i=0}^{l}\frac{1}{1461 - 4i} + \sum_{i=l+1}^{365}\frac{1}{1464 - 4i}\right)= 
-\frac{1461}{366} \sum_{l=0}^{365} \left(\sum_{i=0}^{l}\frac{1}{1461 - 4i} + \frac{1}{4}\sum_{i=l+1}^{365}\frac{1}{366 - i}\right)=
-\frac{1461}{366} \sum_{l=0}^{365} \left(\sum_{i=0}^{l}\frac{1}{1461 - 4i} + \frac{1}{4}\sum_{i=1}^{365-l}\frac{1}{i}\right)=
-\frac{1461}{366} \sum_{l=0}^{365} \left(\sum_{i=0}^{l}\frac{1}{1461 - 4i} + \frac{H_{365-l}}{4}\right)$
-Unfortunately the remaining inner sum does not simplify easily. Thus the final formula
+$E = \sum_{m=1}^{366} (-1)^{m-1} ( \binom{366}{m} \frac{1461}{4m} + \binom{366}{m-1} \frac{1461}{4m - 3} )\text{.}$
 
-$\approx \frac{1461}{366} \left(93.4 + 502\right) \approx 2376,$
-after extensive calculations.
+This should be enough, however due to the sheer amount of divisions, and sizes of binomial coefficients, the numerical error gets quite substantial. In order to alleviate that one should use, for example, fractions. The final equals about 2670 days.
 
-It is however not quite right, because conditioning over where leap day is placed is a little bit more complicated. By the power of monte carlo the results should be around2666
---->
+<!--
+expected_value = sum(
+    (-1)**(m-1) * 1461 * (comb(365, m-1)/Fraction(4*m - 3) + comb(365, m)/Fraction(4*m))
+    for m in range(1, 365+1)
+)
+-->
 
 ## Obtaining a birthday list of the most famous 
 
