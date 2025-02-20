@@ -1,31 +1,22 @@
 import json
 
 
-def extract_day(date_string):
+def extract_month_day(date_string):
     if date_string[0] == "-":
         date_string = date_string.split('-')[1:]
     else:
         date_string = date_string.split('-')
-    return int(date_string[2][0:2])
-
-
-def extract_month(date_string):
-    if date_string[0] == "-":
-        date_string = date_string.split('-')[1:]
-    else:
-        date_string = date_string.split('-')
-    return int(date_string[1])
+    return {
+        "birth_month": int(date_string[1]),
+        "birth_day": int(date_string[2][:2]),
+    }
 
 
 with open('query.json', encoding="UTF-8") as f:
     data = json.load(f)
 
 data = [
-    {
-        **entry,
-        "birth_month": extract_month(entry['birthdate']),
-        "birth_day": extract_day(entry['birthdate'])
-    }
+    entry | extract_month_day(entry['birthdate'])
     for entry in data
     if entry['birthdate'][0:4] != 'http'
 ]
