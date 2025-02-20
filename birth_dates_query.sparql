@@ -1,0 +1,12 @@
+SELECT DISTINCT ?item ?itemLabel ?linkcount ?birthday WHERE
+{
+	?item p:P106 ?statement0.
+	?statement0 (ps:P106) wd:Q901.
+	?item wdt:P569 ?birthday.
+	FILTER(LANG(?itemLabel) = "en")      # Ensure label is in English
+	?item rdfs:label ?itemLabel.
+	?item wikibase:sitelinks ?linkcount .
+	SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
+ORDER BY desc(?linkcount)
+LIMIT 8000
