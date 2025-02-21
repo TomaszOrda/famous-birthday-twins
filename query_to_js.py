@@ -16,15 +16,15 @@ with open('query.json', encoding="UTF-8") as f:
     data = json.load(f)
 
 data = [
-    entry | extract_month_day(entry['birthdate'])
+    entry | extract_month_day(entry['birthDate'])
     for entry in data
-    if entry['birthdate'][0:4] != 'http'
+    # if entry['birthDate'][0:4] != 'http'
 ]
 
 year = {}
-for idx, x in enumerate(sorted(data, key=lambda x: int(x['linkcount']), reverse=True)):
+for idx, x in enumerate(sorted(data, key=lambda x: int(x['siteLinks']), reverse=True)):
     key = f"{x['birth_month']}-{x['birth_day']}"
-    value = {'person': x['itemLabel'], 'link': x['item'], 'linkcount': x['linkcount']}
+    value = {'person': x['name'], 'link': x['id'], 'siteLinks': x['siteLinks']}
 
     if key not in year:
         year[key] = [value]

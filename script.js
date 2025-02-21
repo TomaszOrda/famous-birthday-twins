@@ -54,7 +54,7 @@ function updateTable(){
         table.appendChild(createRow(["", "", "Score"]))
 
         for(let x in birthdayTwins){
-            let row = createRow(["•", birthdayTwins[x]['person'], birthdayTwins[x]['linkcount']])
+            let row = createRow(["•", birthdayTwins[x]['person'], birthdayTwins[x]['siteLinks']])
             row.setAttribute("onclick", `window.location='${birthdayTwins[x]['link']}';`);
             table.appendChild(row)
         }
