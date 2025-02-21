@@ -1,12 +1,17 @@
-SELECT DISTINCT ?item ?itemLabel ?linkcount ?birthday WHERE
-{
-	?item p:P106 ?statement0.
-	?statement0 (ps:P106) wd:Q901.
-	?item wdt:P569 ?birthday.
-	FILTER(LANG(?itemLabel) = "en")      # Ensure label is in English
-	?item rdfs:label ?itemLabel.
-	?item wikibase:sitelinks ?linkcount .
-	SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+SELECT ?id ?name ?birthDate ?calendarModel ?precision ?siteLinks WHERE {
+   ?id wdt:P31 wd:Q5 .
+   ?id p:P569/psv:P569 ?birthDateNode .
+   ?id rdfs:label ?name .
+   ?id wikibase:sitelinks ?siteLinks .
+   ?birthDateNode wikibase:timePrecision ?precision .
+   ?birthDateNode wikibase:timeValue ?birthDate . 
+   ?birthDateNode wikibase:timeCalendarModel ?calendarModel .
+   FILTER (1875 <= year(?birthDate) && year(?birthDate) < 1900) .
+   FILTER (?precision >= 11) .
+   FILTER (?siteLinks > 30) .
+   FILTER (LANG(?name) = "en") .
+   SERVICE wikibase:label {
+      bd:serviceParam wikibase:language "en" .
+   }
 }
-ORDER BY desc(?linkcount)
-LIMIT 8000
+ORDER BY desc(?siteLinks)
