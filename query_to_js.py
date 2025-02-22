@@ -97,7 +97,7 @@ if __name__ == "__main__":
         f.write("}")
 
     with open('data_calendar.js', 'w', encoding="UTF-8") as f:
-        f.write("birthdays = {\n")
+        f.write("birthdays_calendar = {\n")
         for key, value in birthdays.year_dictionary(gregorian=False).items():
             f.write(f'"{key}":{value},\n')
         f.write("}")

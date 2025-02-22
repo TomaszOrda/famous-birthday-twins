@@ -47,8 +47,12 @@ function updateTable(){
         document.getElementById('day').textContent = ordinalToCardinal(day)
         document.getElementById('month').textContent = monthNumberToMonthName(month)
         document.getElementById('listOfTwins').style.display = "initial"
-        
-        let birthdayTwins = birthdays[`${month}-${day}`]
+        let birthdayTwins = []
+        if(document.getElementById("gregorian_calendar_toggle").checked){
+            birthdayTwins = birthdays[`${month}-${day}`]
+        }else{
+            birthdayTwins = birthdays_calendar[`${month}-${day}`]
+        }
         let table = document.getElementById('listOfTwinsTable')
         table.innerHTML = ""
         table.appendChild(createRow(["", "", "Score"]))

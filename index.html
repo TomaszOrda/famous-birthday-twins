@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="style.css" type="text/css"  />
     <script src="script.js"></script>
     <script src="data.js"></script>
+    <script src="data_calendar.js"></script>
 </head>
 <body onload="handleUrlParams()">
     <h1>
@@ -18,7 +19,13 @@
     
     <p>Birthday twins are people who share the day and month of their birthday — not necesarily year. 
     However the term should be considered a colloquialism, as there are no references to it in dictionaries.</p>
-
+    
+    Use Gregorian calendar for all entries: 
+    <label style="margin-bottom: 0.5em" class="switch">
+        <input id="gregorian_calendar_toggle" type="checkbox">
+        <span class="slider"></span>
+    </label> 
+    <br>
     <label for="birthday">Your birthday:</label>
     <input type="date" id="birthday" name="birthday" /> 
     <button onclick="updateTable()">Search</button>
