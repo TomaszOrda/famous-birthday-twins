@@ -1,29 +1,52 @@
+from datetime import datetime
 import json
+import jdcal
+
+GREGORIAN_MODEL = "http://www.wikidata.org/entity/Q1985727"
+JULIAN_MODEL = "http://www.wikidata.org/entity/Q1985786"
 
 
-def extract_month_day(date_string):
-    if date_string[0] == "-":
-        date_string = date_string.split('-')[1:]
+def extract_month_day(entry):
+    if entry['birthDate'][0] == '-':
+        sign = -1
+        birth_date = entry['birthDate'][1:].replace('Z', '+00:00')
     else:
-        date_string = date_string.split('-')
+        sign = 1
+        birth_date = entry['birthDate'].replace('Z', '+00:00')
+
+    date = datetime.fromisoformat(birth_date).date()
+    date = (sign*date.year, date.month, date.day)
+
+    if entry['calendarModel'] == GREGORIAN_MODEL:
+        calendar_date = date
+    elif entry['calendarModel'] == JULIAN_MODEL:
+        calendar_date = jdcal.jd2jcal(*jdcal.gcal2jd(*date))
+    else:
+        raise ValueError("Unknown calendar model: ", entry['calendarModel'])
+
     return {
-        "birth_month": int(date_string[1]),
-        "birth_day": int(date_string[2][:2]),
+        "birthMonth": date[1],
+        "birthDay": date[2],
+        "birthMonthCalendar": calendar_date[1],
+        "birthDayCalendar": calendar_date[2]
     }
 
 
 class Birthdays:
     def __init__(self, raw_data) -> None:
         self.data = [
-            entry | extract_month_day(entry['birthDate'])
+            entry | extract_month_day(entry)
             for entry in raw_data
             # if entry['birthDate'][0:4] != 'http'
         ]
 
-    def year_dictionary(self):
+    def year_dictionary(self, gregorian=True):
         year = {}
         for idx, x in enumerate(sorted(self.data, key=lambda x: int(x['siteLinks']), reverse=True)):
-            dict_key = f"{x['birth_month']}-{x['birth_day']}"
+            if gregorian:
+                dict_key = f"{x['birthMonth']}-{x['birthDay']}"
+            else:
+                dict_key = f"{x['birthMonthCalendar']}-{x['birthDayCalendar']}"
             dict_value = {'person': x['name'], 'link': x['id'], 'siteLinks': x['siteLinks']}
 
             if dict_key not in year:
@@ -48,6 +71,12 @@ if __name__ == "__main__":
 
     with open('data.js', 'w', encoding="UTF-8") as f:
         f.write("birthdays = {\n")
-        for key, value in birthdays.year_dictionary().items():
+        for key, value in birthdays.year_dictionary(gregorian=True).items():
+            f.write(f'"{key}":{value},\n')
+        f.write("}")
+
+    with open('data_calendar.js', 'w', encoding="UTF-8") as f:
+        f.write("birthdays = {\n")
+        for key, value in birthdays.year_dictionary(gregorian=False).items():
             f.write(f'"{key}":{value},\n')
         f.write("}")
