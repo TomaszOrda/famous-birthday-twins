@@ -39,6 +39,27 @@ class Birthdays:
             for entry in raw_data
             # if entry['birthDate'][0:4] != 'http'
         ]
+        self.remove_duplicates()
+
+    def remove_duplicates(self):
+        ids_to_remove = set()
+        pos_to_remove = set()
+        seen = {}
+        for pos, element in enumerate(self.data):
+            if element['id'] not in seen:
+                seen[element['id']] = element
+            else:
+                other = seen[element['id']]
+                if (other['birthDay'], other['birthMonth']) != (element['birthDay'], element['birthMonth']):
+                    ids_to_remove.add(element['id'])
+                else:
+                    pos_to_remove.add(pos)
+        self.data = [
+            entry
+            for pos, entry in enumerate(self.data)
+            if entry['id'] not in ids_to_remove
+            if pos not in pos_to_remove
+        ]
 
     def year_dictionary(self, gregorian=True):
         year = {}
