@@ -40,6 +40,16 @@ class Birthdays:
             # if entry['birthDate'][0:4] != 'http'
         ]
         self.remove_duplicates()
+        self.filter_low_site_links(min_links=50)
+
+    def filter_low_site_links(self, min_links):
+        self.data = [
+            entry
+            for entry in self.data
+            if int(entry['siteLinks']) >= min_links or
+            entry['birthMonth'] == 2 and entry['birthDay'] == 29 or
+            entry['birthMonthCalendar'] == 2 and entry['birthDayCalendar'] == 29
+        ]
 
     def remove_duplicates(self):
         ids_to_remove = set()
