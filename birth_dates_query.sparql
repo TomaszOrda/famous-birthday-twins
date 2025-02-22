@@ -1,14 +1,24 @@
 SELECT ?id ?name ?birthDate ?calendarModel ?precision ?siteLinks WHERE {
+   
+   # Get all people, together with some data
    ?id wdt:P31 wd:Q5 .
    ?id p:P569/psv:P569 ?birthDateNode .
    ?id rdfs:label ?name .
    ?id wikibase:sitelinks ?siteLinks .
+
+   # Extract crucial information about the birth date
    ?birthDateNode wikibase:timePrecision ?precision .
    ?birthDateNode wikibase:timeValue ?birthDate . 
    ?birthDateNode wikibase:timeCalendarModel ?calendarModel .
+
+   # Get only people between specific dates (to fit inside the time limit)
    FILTER (1875 <= year(?birthDate) && year(?birthDate) < 1900) .
+   # Get only dates that are precise up to the day
    FILTER (?precision >= 11) .
+   # Get only reasonably famous people
    FILTER (?siteLinks > 30) .
+
+   # Only english articles
    FILTER (LANG(?name) = "en") .
    SERVICE wikibase:label {
       bd:serviceParam wikibase:language "en" .
