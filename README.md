@@ -64,39 +64,43 @@ Wikipedia is a pretty straightforward idea. Yet there is also Wikidata, which se
 The SPARQL query should look as follows.
 
 ```
-SELECT DISTINCT ?item ?itemLabel ?linkcount ?birthday WHERE
-{
-	?item p:P31 ?statement0.
-	?statement0 (ps:P31/(wdt:P279*)) wd:Q5.
-	?item wdt:P569 ?birthday.
-	FILTER(LANG(?itemLabel) = "en")      # Ensure label is in English
-	?item rdfs:label ?itemLabel.
-	?item wikibase:sitelinks ?linkcount .
-	SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+SELECT ?id ?name ?birthDate ?calendarModel ?precision ?siteLinks WHERE {
+   
+   # Get all people, together with some data
+   ?id wdt:P31 wd:Q5 .
+   ?id p:P569/psv:P569 ?birthDateNode .
+   ?id rdfs:label ?name .
+   ?id wikibase:sitelinks ?siteLinks .
+
+   # Extract crucial information about the birth date
+   ?birthDateNode wikibase:timePrecision ?precision .
+   ?birthDateNode wikibase:timeValue ?birthDate . 
+   ?birthDateNode wikibase:timeCalendarModel ?calendarModel .
+
+   # Get only people between specific dates (to fit inside the time limit)
+   FILTER (1875 <= year(?birthDate) && year(?birthDate) < 1900) .
+   # Get only dates that are precise up to the day
+   FILTER (?precision >= 11) .
+   # Get only reasonably famous people
+   FILTER (?siteLinks > 30) .
+
+   # Only english articles
+   FILTER (LANG(?name) = "en") .
+   SERVICE wikibase:label {
+      bd:serviceParam wikibase:language "en" .
+   }
 }
-ORDER BY desc(?linkcount)
-LIMIT 8000
+ORDER BY desc(?siteLinks)
 ```   
- However there is another problem. `P31Q5` is very big and Wikidata query service limits every query to one minute. It would be possible — having of course enough computational power — to download wikidata dump and run the query. I could not do that. Instead the first part of the query is as follows
- 
-```
-	?item p:P106 ?statement0.
-	?statement0 (ps:P106/(wdt:P279*)) wd:Q901.
-```
- 
- Which takes all records with given occupation. Here the occupation is `Q901` which means a scientist.
- 
-Usually that is still not enough. `/(wdt:P279*)` is also expensive. Getting rid of this part might reduce the results by every record that is not marked scientist, but with a specific scientific occupation (for example a astrologist, that was not marked a scientist for any reason).
+The `FILTER (1875 <= year(?birthDate) && year(?birthDate) < 1900) .` helps limit the query execution time. The [Wikidata Query Service](https://query.wikidata.org/) limits each query to one minute. It works because dates seem to be indexed in some way. However we do not really know which properties are actually indexed. In a prefect world `wikibase:sitelinks` would be, but in fact it does not seem to be the case.
 
-Naturally it creates a problem of finding every possible occupation that a famous person might have. Because of that, data provided by this version is very much not complete. The occupations used are `Q901, Q82955, Q4964182, Q170790, Q201788, Q483501, Q188094, Q55092, Q482980, Q1930187, Q169470, Q593644, Q36834, Q42973, Q40348, Q662729, Q211236, Q4991371, Q189290, Q4504549, Q116, Q1251441, Q15995642, Q29182, Q639669, Q55631411`.
+Number of records, after combining the queries, is just shy of 30 000. Filtering out all the records that have less than 50 sitelinks results in almost exactly 10 000 records. Which (as we got to know from the previous paragraphs) leaves a lot of room for unlucky birthdays. Also, perhaps we would like to have at least a few people for each day of the year to choose from.
 
-The query was limited to 8000. It gives us room for any unlucky lists of birthdays (Chance of not hitting each day is very small), while creating a reasonably sized list for each day.
-
-## Turning query result into browser app readable data
+<!-- ## Turning query result into browser app readable data
 
 At this point everything gets pretty straightforward. Assume we have one, maybe not sorted, SPARQL query result as a simple JSON.
 
-Now I will quickly go through the code in dataParsing.py
+Now I will quickly go through the code in query_to_js.py
 
 * First few lines load the file and sort the result by *linkcount*. 
 * Next we need to remove missing data — birth dates that are links are not valid, and extract day and month from the birth date. Note that when working on a live list, we need to go through it in reverse order. Otherwise we would be shifting indexes that have not yet been visited. 
@@ -104,13 +108,13 @@ Now I will quickly go through the code in dataParsing.py
 * For each record in the sorted list, we create a key (being the birthday) and either create a new entry with a list containing the record, or we append the record to an existing list. Each time we create a list, we raise the counter to check our calculations and to be sure that we have covered everything.
 * Finally the ready dictionary is written into a file.
 
-Naturally, if we had more than one query, we need to join them together beforehand.
+Naturally, if we had more than one query, we need to join them together beforehand. -->
 
 ## Problems with the data
 
-Firstly, Wikidata birthdays are not always using the same calendar as Wikipedia. I believe that Wikidata uses the current calendar — which would mean that before adoption of the Gregorian calendar each date would be about 10 days off. And that corresponds with the results. It is not taken into account in the final version. Mayhaps it will be repaired in the future, either by subtracting the days or updating the data.
+Firstly, Wikidata birthdays are not always using the same calendar as Wikipedia. I believe that Wikidata uses always Gregorian calendar for the dates — which would mean that before adoption of the Gregorian calendar each date would be about 10 days off. And that corresponds with the results. In the final version one can choose to use calendar dates (like on wikipedia) or Gregorian dates (like on Wikidata).
 
-Secondly, for each record which does not have a specific day (or month) attached — most commonly because it is unknown — the first day (January) will be used. Example being Cleopatra (and Julius Caesar). I do not know of a way to omit those records in Wikidata.
+Secondly there are quite some people that appear in several records. Sometimes with the same date of birth (for various reasons, some unknown to me), sometimes with different (there might be more than one speculated date of birth). In the first case we need to remove duplicates. In second I have decided to remove all the records of such person. Maybe it would be better to somehow get to know if a specific date is *the most trustworthy*.
 
 ## Design of the app
 
