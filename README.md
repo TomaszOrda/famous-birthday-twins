@@ -15,8 +15,8 @@ Using that we can infer the expected number of tries until another day is covere
 
 Note that we do not use Bernoulli distribution. We are not expecting one hit in $i$ tries, but $i-1$ fails and then a hit. That is why there is no binomial coefficient. In fact it is (slightly less known) geometric distribution (to be precisem shifted geometric distribution, because we count all the failures and an additional one for success). Thus the following calculation is basically deriving the expected value of this distribution in this specific scenario. General calculations might have been slightly easier. However that would be less natural and somewhat harder to understand.
 
-Expected number of tries when $n$ days are already covered is then calculated by $`E_n =\sum_{i=1}^\infty i* p_n(i)`$ where $p_n(i)$ is the probability we just calculated. Applying that to the equation, and applying geometric sum formula, we get:
-$`E_n = \sum_{i=1}^\infty i*\frac{365-n}{365}\left(\frac{n}{365}\right)^{i-1} = \frac{365-n}{365}\sum_{i=1}^\infty i*\left(\frac{n}{365}\right)^{i-1} =\frac{365-n}{365}\sum_{j=1}^\infty\sum_{i=j}^\infty \left(\frac{n}{365}\right)^{i-1} =\frac{365-n}{365}\sum_{j=1}^\infty \frac{\left(\frac{n}{365}\right)^{j-1}}{1- \frac{n}{365}} =\sum_{j=1}^\infty \left(\frac{n}{365}\right)^{j-1} =\frac{1}{1-\frac{n}{365}} = \frac{365}{365-n}\text{.}`$
+Expected number of tries when $n$ days are already covered is then calculated by $E_n =\sum_{i=1}^\infty i* p_n(i)$ where $p_n(i)$ is the probability we just calculated. Applying that to the equation, and applying geometric sum formula, we get:
+$E_n = \sum_{i=1}^\infty i*\frac{365-n}{365}\left(\frac{n}{365}\right)^{i-1} = \frac{365-n}{365}\sum_{i=1}^\infty i*\left(\frac{n}{365}\right)^{i-1} =\frac{365-n}{365}\sum_{j=1}^\infty\sum_{i=j}^\infty \left(\frac{n}{365}\right)^{i-1} =\frac{365-n}{365}\sum_{j=1}^\infty \frac{\left(\frac{n}{365}\right)^{j-1}}{1- \frac{n}{365}} =\sum_{j=1}^\infty \left(\frac{n}{365}\right)^{j-1} =\frac{1}{1-\frac{n}{365}} = \frac{365}{365-n}\text{.}$
 
 Now, we only need to calculate the total number of random birthdays until the full year is covered. We will sum up the tries until the first day is covered and second is covered, third and so on.
 $E = \sum_{i=0}^{364} E_i = \sum_{i=0}^{364} \frac{365}{365-i} = 365\sum_{i=0}^{364} \frac{1}{365-i} = 365\sum_{i=1}^{365} \frac{1}{i} =365H_{365} \approx 365*6.48 \approx 2365$
@@ -36,20 +36,15 @@ Let's denote $\forall_{0<i<366} \ p_i = \frac{4}{1461}$ probability of randomly 
 
 To calculate the expected value, we will use the result from [[Ferrante and Frigo, 2014]](https://www.researchgate.net/publication/232028148_A_note_on_the_coupon_-_collector's_problem_with_multiple_arrivals_andthe_random_sampling#pfe):
 
-<!-- Short version of the proof-->
-
-
-<!-- Use big equations -->
-
-$E = \sum_{m=1}^{366} (-1)^{m-1}\sum_{0 < i_1 < i_2 <...<i_m \leq 366} \frac{1}{\sum_k p_{i_k}}\text{.}$
+$$E = \sum_{m=1}^{366} (-1)^{m-1}\left(\sum_{0 < i_1 < i_2 < \ldots < i_m \leq 366} \frac{1}{\sum_k p_{i_k}}\right)\text{.}$$
 
 We can divide the inner sum into one containing probability of getting 29th February, and one not containing it. Then replacing probabilities with adequate values.
 
-$E = \sum_{m=1}^{366} (-1)^{m-1} ( \sum_{0 < i_1 < i_2 <...<i_m <366} \frac{1}{\sum_k \frac{4}{1461}} + \sum_{0 < i_2 <...<i_m<366} \frac{1}{\sum_k \frac{4}{1461} + \frac{1}{1461}} )$
+$$E = \sum_{m=1}^{366} (-1)^{m-1} \left( \sum_{0 < i_1 < i_2 < \ldots < i_m <366} \frac{1}{\sum_k \frac{4}{1461}} + \sum_{0 < i_2 <\ldots < i_m <366} \frac{1}{\sum_k \frac{4}{1461} + \frac{1}{1461}} \right)$$
 
-By collapsing the inner sums into multiplications, we ge:
+By collapsing the inner sums into multiplications, we get:
 
-$E = \sum_{m=1}^{366} (-1)^{m-1} ( \binom{366}{m} \frac{1461}{4m} + \binom{366}{m-1} \frac{1461}{4m - 3} )\text{.}$
+$$E = \sum_{m=1}^{366} (-1)^{m-1} \left( \binom{366}{m} \frac{1461}{4m} + \binom{366}{m-1} \frac{1461}{4m - 3} \right)\text{.}$$
 
 This should be enough; however, due to the sheer amount of divisions, and sizes of binomial coefficients, the numerical error gets quite substantial. In order to alleviate that one should use, for example, fractions. The final result is about 2670 days.
 
