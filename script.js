@@ -59,7 +59,7 @@ function updateTable(){
 
         for(let x in birthdayTwins){
             let row = createRow(["•", birthdayTwins[x]['person'], birthdayTwins[x]['siteLinks']])
-            row.setAttribute("onclick", `window.location='${birthdayTwins[x]['link']}';`);
+            row.setAttribute("onclick", `window.open('${birthdayTwins[x]['link']}', '_blank');`);
             table.appendChild(row)
         }
     }
